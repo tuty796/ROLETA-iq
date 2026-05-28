@@ -762,10 +762,11 @@
         .pay-msg { font-size: 0.9rem; color: var(--silver2); line-height: 1.6; margin-bottom: 24px; }
         .pay-qr-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
         .pay-btn-copy {
-            background: var(--gold); color: #000; border: none; border-radius: 10px;
-            padding: 12px 24px; font-family: 'Rajdhani', sans-serif; font-weight: 700;
+            background: #009ee3; color: #fff; border: none; border-radius: 12px;
+            padding: 18px 24px; font-family: 'Rajdhani', sans-serif; font-weight: 700;
             text-transform: uppercase; letter-spacing: 2px; cursor: pointer; width: 100%;
-            transition: 0.2s; margin-bottom: 15px;
+            transition: 0.2s; margin-bottom: 20px; font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 158, 227, 0.3);
         }
         .pay-btn-copy:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(201,168,76,0.4); }
         .pay-status { font-size: 0.8rem; color: var(--muted); font-style: italic; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -1459,14 +1460,15 @@ function calcularGestao() {
                 <strong>Liberação Automática:</strong> Pague via Mercado Pago e o sistema liberará seu acesso na hora.
             </div>
             
-            <button class="pay-btn-copy" onclick="window.location.href='https://mpago.la/24WyJ3h'" style="background: linear-gradient(135deg, #009ee3, #007eb5); color: white; margin-bottom: 20px; font-size: 14px; height: 55px; cursor: pointer; border: none; border-radius: 12px; width: 100%; font-weight: bold; text-transform: uppercase;">
+            <button class="pay-btn-copy" onclick="window.location.href='https://mpago.la/24WyJ3h'">
                 PAGAR R$ 2,00 E LIBERAR
             </button>
 
             <div class="divider" style="margin-bottom: 20px; opacity: 0.1;"></div>
 
-            <div class="pay-msg" style="font-size: 0.75rem; color: var(--muted);">
-                Após o pagamento, você será redirecionado de volta e o contador será zerado automaticamente.
+            <div class="pay-status">
+                <div class="pay-spinner"></div>
+                Aguardando confirmação de pagamento...
             </div>
         </div>
     </div>
