@@ -1613,13 +1613,9 @@ function calcularGestao() {
         const payStatus = document.querySelector('.pay-status');
         payStatus.innerHTML = '<div class="pay-spinner"></div> Verificando transação...';
         
-        // Simulação de verificação para site estático
+        // Simulação de verificação - No futuro você pode integrar com um bot de verificação
         setTimeout(() => {
-            rodadasContador = 0;
-            localStorage.setItem('r1m_rodadas', 0);
-            document.getElementById('pay-overlay').classList.remove('active');
-            alert('Pagamento confirmado! Suas rodadas foram zeradas. Boas operações!');
-            location.reload();
+            alert('Atenção: A verificação automática está em manutenção. Por favor, envie o comprovante para o suporte caso o acesso não seja liberado em 5 minutos.');
         }, 2000);
     }
 
