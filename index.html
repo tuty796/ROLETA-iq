@@ -1450,26 +1450,31 @@ function calcularGestao() {
 
 <div class="divider"></div>
 
-<!-- OVERLAY DE PAGAMENTO -->
-<div class="pay-overlay" id="pay-overlay">
-    <div class="pay-card">
-        <div class="pay-title">SESSÃO LIMITADA</div>
-        <div class="pay-msg">
-            O analisador atingiu o limite de 20 rodadas gratuitas.<br><br>
-            <strong>Ajude-nos a manter a ferramenta online:</strong> contribua com apenas R$ 2,00 para liberar mais 20 rodadas.
-        </div>
-        <div class="pay-qr-wrap"><div id="qrcode-pay"></div></div>
-        <div class="pix-chave-box" style="margin-bottom:20px;">
-            <div class="pix-chave-label">PIX COPIA E COLA</div>
-            <div class="pix-chave" id="pay-chave-txt" style="font-size:10px; overflow: hidden; text-overflow: ellipsis;">2149f2b9-67f9-46e1-9d62-fcb33d6e0b3d</div>
-        </div>
-        <button class="pay-btn-copy" onclick="copiarPixOverlay()">Copiar Chave Pix</button>
-        <div class="pay-status">
-            <div class="pay-spinner"></div>
-            Aguardando pagamento automático...
+    <!-- OVERLAY DE PAGAMENTO -->
+    <div class="pay-overlay" id="pay-overlay">
+        <div class="pay-card">
+            <div class="pay-title">SESSÃO LIMITADA</div>
+            <div class="pay-msg">
+                O analisador atingiu o limite de 20 rodadas gratuitas.<br><br>
+                <strong>Liberação Automática:</strong> Pague via Mercado Pago e o sistema liberará seu acesso na hora.
+            </div>
+            
+            <button class="pay-btn-copy" onclick="window.location.href='https://mpago.la/24WyJ3h'" style="background: linear-gradient(135deg, #009ee3, #007eb5); color: white; margin-bottom: 20px; font-size: 14px; height: 55px;">
+                PAGAR R$ 2,00 E LIBERAR
+            </button>
+
+            <div class="divider" style="margin-bottom: 20px;"></div>
+
+            <div class="pay-msg" style="font-size: 0.75rem; color: var(--muted);">
+                Após o pagamento, você será redirecionado de volta e o contador será zerado automaticamente.
+            </div>
+
+            <div class="pay-status">
+                <div class="pay-spinner"></div>
+                Aguardando confirmação...
+            </div>
         </div>
     </div>
-</div>
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -1505,8 +1510,27 @@ function calcularGestao() {
 <!-- QR CODE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+    // CONFIGURAÇÕES
     const PIX_CHAVE = '2149f2b9-67f9-46e1-9d62-fcb33d6e0b3d';
+    const MP_LINK = 'https://mpago.la/24WyJ3h';
+    const LIMITE_RODADAS = 20;
+
+    let historico = [], saldo = 0, vitorias = 0, derrotas = 0;
+    let rodadasContador = parseInt(localStorage.getItem('r1m_rodadas')) || 0;
+
     window.addEventListener('load', () => {
+        // VERIFICAR RETORNO DE PAGAMENTO
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('paid') === 'true') {
+            rodadasContador = 0;
+            localStorage.setItem('r1m_rodadas', 0);
+            window.history.replaceState({}, document.title, window.location.pathname);
+            alert('✅ Pagamento Confirmado! Sua sessão foi liberada.');
+        }
+
+        verificarBloqueio();
+        
+        // QR Code de Apoio (Lateral)
         const pixPayload = gerarPixPayload(PIX_CHAVE, '2.00', 'Apoio Analisador Roleta');
         new QRCode(document.getElementById("qrcode"), {
             text: pixPayload, width: 160, height: 160,
@@ -1514,6 +1538,15 @@ function calcularGestao() {
             correctLevel: QRCode.CorrectLevel.M
         });
     });
+
+    function verificarBloqueio() {
+        if (rodadasContador >= LIMITE_RODADAS) {
+            document.getElementById('pay-overlay').classList.add('active');
+        } else {
+            document.getElementById('pay-overlay').classList.remove('active');
+        }
+    }
+
     function gerarPixPayload(chave, valor, descricao) {
         function emv(id, value) { const len = value.length.toString().padStart(2,'0'); return `${id}${len}${value}`; }
         const merchantAccountInfo = emv('00','BR.GOV.BCB.PIX') + emv('01', chave);
@@ -1528,112 +1561,6 @@ function calcularGestao() {
             for (let j = 0; j < 8; j++) { crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1; }
         }
         return ((crc & 0xFFFF).toString(16).toUpperCase()).padStart(4,'0');
-    }
-    function copiarPix() {
-        navigator.clipboard.writeText(PIX_CHAVE).then(() => {
-            const btn = document.getElementById('btn-pix');
-            btn.textContent = '✓ Chave Copiada!';
-            btn.classList.add('copiado');
-            setTimeout(() => { btn.textContent = '◈ Copiar Chave Pix'; btn.classList.remove('copiado'); }, 2500);
-        });
-    }
-
-    // ANALISADOR
-    const tabela = {
-        0:[10,20,30],1:[17,7],2:[2,22],3:[3,33],4:[21,9],5:[25,15,35],
-        6:[20,17,7],7:[7,17,20],8:[30,0,20],9:[9,19],10:[0,20,30],
-        11:[30,0,20],12:[33,15],13:[20,7],14:[17,7],15:[9,5,35],
-        16:[3,33],17:[17,20,7],18:[2,22],19:[19,9],20:[17,7],
-        21:[2,22],22:[2,22],23:[0,10],24:[35,15,25],25:[20,22],
-        26:[0,10,30],27:[17,7,20],28:[7,17,20],29:[7,17,20],
-        30:[0,20,30],31:[9,19],32:[0,10,20,30],33:[3,33],
-        34:[7,20],35:[3,33,15],36:[20,30]
-    };
-    let historico = [], saldo = 0, vitorias = 0, derrotas = 0;
-    let rodadasContador = parseInt(localStorage.getItem('r1m_rodadas')) || 0;
-    const LIMITE_RODADAS = 20;
-
-    const MP_ACCESS_TOKEN = 'APP_USR-2822729122857502-052817-7118cc217b3fee07cc126405a35b66bc-3434456944';
-    let currentPaymentId = null;
-
-    window.addEventListener('load', () => {
-        verificarBloqueio();
-        
-        // QR Code de Apoio (Mantido Estático)
-        const pixPayload = gerarPixPayload(PIX_CHAVE, '2.00', 'Apoio Analisador Roleta');
-        new QRCode(document.getElementById("qrcode"), {
-            text: pixPayload, width: 160, height: 160,
-            colorDark: "#c9a84c", colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.M
-        });
-    });
-
-    function verificarBloqueio() {
-        if (rodadasContador >= LIMITE_RODADAS) {
-            document.getElementById('pay-overlay').classList.add('active');
-            gerarQRCodePagamento();
-        }
-    }
-
-    async function gerarQRCodePagamento() {
-        const qrContainer = document.getElementById("qrcode-pay");
-        const payStatus = document.querySelector('.pay-status');
-        const payChave = document.getElementById('pay-chave-txt');
-        
-        qrContainer.innerHTML = '<div class="pay-spinner" style="width:40px; height:40px;"></div>';
-        payStatus.innerHTML = '<div class="pay-spinner"></div> Gerando Pix...';
-        payChave.innerText = 'Carregando...';
-
-        try {
-            // Gerando payload Pix estático para evitar erro de CORS do Mercado Pago em site estático
-            const pixPayload = gerarPixPayload(PIX_CHAVE, '2.00', 'Desbloqueio Analisador R1M');
-            
-            // Gerar QR Code visualmente
-            qrContainer.innerHTML = ''; // Limpa spinner
-            new QRCode(qrContainer, {
-                text: pixPayload,
-                width: 180,
-                height: 180,
-                colorDark: "#c9a84c",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.M
-            });
-            
-            payChave.innerText = pixPayload;
-            payStatus.innerHTML = 'Aguardando pagamento...<br><button onclick="confirmarPagamentoManual()" class="pay-btn-copy" style="margin-top:10px; background:var(--green-neon); color:black;">JÁ REALIZEI O PAGAMENTO</button>';
-            
-        } catch (error) {
-            console.error(error);
-            qrContainer.innerHTML = '❌';
-            payStatus.innerText = 'Erro ao gerar Pix. Tente recarregar a página.';
-        }
-    }
-
-    function confirmarPagamentoManual() {
-        const payStatus = document.querySelector('.pay-status');
-        payStatus.innerHTML = '<div class="pay-spinner"></div> Verificando transação...';
-        
-        // Simulação de verificação - No futuro você pode integrar com um bot de verificação
-        setTimeout(() => {
-            alert('Atenção: A verificação automática está em manutenção. Por favor, envie o comprovante para o suporte caso o acesso não seja liberado em 5 minutos.');
-        }, 2000);
-    }
-
-
-    function copiarPixOverlay() {
-        const chave = document.getElementById('pay-chave-txt').innerText;
-        if (chave === 'Carregando...') return;
-        
-        navigator.clipboard.writeText(chave).then(() => {
-            const btn = document.querySelector('.pay-btn-copy');
-            const originalText = btn.innerText;
-            btn.innerText = '✓ COPIADO!';
-            btn.style.background = 'var(--green-neon)';
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.style.background = 'var(--gold)';
-            }, 2000);
-        });
     }
 
     function aoDigitar() {
