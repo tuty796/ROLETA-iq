@@ -153,7 +153,34 @@
             color: var(--silver3); letter-spacing: 0.06em;
             margin: 18px 0 36px; text-transform: uppercase;
         }
-        .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+        .hero-btns-row { display: flex; gap: 10px; justify-content: center; width: 100%; }
+        .btn-purple {
+            padding: 14px 28px; border-radius: 8px; font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+            text-decoration: none; cursor: pointer; transition: all 0.3s ease;
+            background: rgba(138, 43, 226, 0.15); color: #a855f7; border: 1px solid rgba(138, 43, 226, 0.4);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.1);
+        }
+        .btn-purple:hover { background: rgba(138, 43, 226, 0.25); border-color: #a855f7; box-shadow: 0 0 25px rgba(138, 43, 226, 0.3); transform: translateY(-2px); }
+
+        /* CALCULADORA */
+        .calc-container { background: var(--dark2); border: 1px solid var(--dark4); border-radius: 14px; padding: 24px; margin-bottom: 30px; position: relative; overflow: hidden; }
+        .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .calc-input-group { display: flex; flex-direction: column; gap: 6px; }
+        .calc-input-group label { font-size: 0.72rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.05em; }
+        .calc-input-group input { background: var(--dark1); border: 1px solid #333; border-radius: 6px; padding: 10px; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
+        .calc-input-group input:focus { border-color: var(--gold); }
+        .calc-result-box { background: rgba(201, 168, 76, 0.03); border: 1px solid rgba(201, 168, 76, 0.1); border-radius: 10px; padding: 15px; margin-top: 15px; }
+        .calc-res-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        .calc-res-item:last-child { margin-bottom: 0; padding-top: 8px; border-top: 1px dashed #333; font-weight: 700; }
+        .calc-res-label { color: var(--silver3); }
+        .calc-res-val { color: var(--gold2); font-family: 'Orbitron', sans-serif; }
+        .calc-msg { margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.5; text-align: center; font-style: italic; display: none; }
+        .calc-msg.active { display: block; animation: fadeIn 0.5s ease; }
+        .msg-green { background: rgba(0, 255, 136, 0.05); color: var(--green-neon); border: 1px solid rgba(0, 255, 136, 0.2); }
+        .msg-red { background: rgba(255, 34, 68, 0.05); color: var(--red-neon); border: 1px solid rgba(255, 34, 68, 0.2); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .btn-gold {
             background: linear-gradient(135deg, var(--gold), var(--gold3));
             border: none; border-radius: 10px; padding: 13px 28px;
@@ -749,8 +776,13 @@
     </h1>
     <p class="hero-sub">Método Operacional · Análises Hard · Analisador em Tempo Real</p>
     <div class="hero-btns">
-        <a href="#metodo" class="btn-gold">Ver Método</a>
-        <a href="#analisador" class="btn-outline">Abrir Analisador</a>
+        <div class="hero-btns-row">
+            <a href="#metodo" class="btn-gold">Ver Método</a>
+            <a href="#analisador" class="btn-outline">Analisador</a>
+        </div>
+        <div class="hero-btns-row" style="margin-top:10px;">
+            <a href="#gestao" class="btn-purple">Calculadora de Gestão</a>
+        </div>
     </div>
     <div class="hero-stats">
         <div class="stat"><div class="stat-num">37</div><div class="stat-lbl">Números</div></div>
@@ -1220,6 +1252,91 @@
 
     </div>
 </section>
+
+<div class="divider"></div>
+
+<!-- ═══ GESTÃO DE BANCA ═══ -->
+<section class="section alt" id="gestao">
+    <div class="container">
+        <div class="s-eyebrow">Segurança</div>
+        <div class="s-title">Gestão e <span>Saúde Financeira</span></div>
+
+        <div class="oracle-intro" style="margin-bottom:32px;">
+            <p>A consistência no mercado não nasce apenas de boas entradas, mas de uma <strong>gestão blindada</strong>. Nós nos importamos com sua saúde financeira — nunca opere sem metas claras. Utilize a calculadora abaixo para definir seus limites operacionais antes de cada sessão.</p>
+        </div>
+
+        <div class="calc-container">
+            <div class="calc-grid">
+                <div class="calc-input-group">
+                    <label>Banca Inicial (R$)</label>
+                    <input type="number" id="calc-banca" placeholder="Ex: 100.00" oninput="calcularGestao()">
+                </div>
+                <div class="calc-input-group">
+                    <label>Meta Diária (%)</label>
+                    <input type="number" id="calc-green" placeholder="Ex: 10" oninput="calcularGestao()">
+                </div>
+                <div class="calc-input-group">
+                    <label>Limite Perda (%)</label>
+                    <input type="number" id="calc-loss" placeholder="Ex: 5" oninput="calcularGestao()">
+                </div>
+                <div class="calc-input-group">
+                    <label>Valor Apostas (R$)</label>
+                    <input type="number" id="calc-bet" placeholder="Ex: 2.00" oninput="calcularGestao()">
+                </div>
+            </div>
+
+            <div class="calc-result-box">
+                <div class="calc-res-item">
+                    <span class="calc-res-label">Alvo de Lucro (Stop Green):</span>
+                    <span class="calc-res-val" id="res-green">R$ 0,00</span>
+                </div>
+                <div class="calc-res-item">
+                    <span class="calc-res-label">Máximo de Perda (Stop Loss):</span>
+                    <span class="calc-res-val" id="res-loss">R$ 0,00</span>
+                </div>
+                <div class="calc-res-item">
+                    <span class="calc-res-label">Banca Final Estimada:</span>
+                    <span class="calc-res-val" id="res-final">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div id="msg-green" class="calc-msg msg-green">
+                🏆 <strong>Meta Atingida!</strong> Parabéns pela disciplina. Encerre por hoje, aproveite seu lucro e volte amanhã com a mesma mentalidade.
+            </div>
+            <div id="msg-red" class="calc-msg msg-red">
+                🛡️ <strong>Stop Loss Atingido!</strong> Respeite seu gerenciamento acima de tudo. Calma, amanhã é um novo dia e estamos juntos nessa! A consistência vem da proteção do capital.
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function calcularGestao() {
+    const banca = parseFloat(document.getElementById('calc-banca').value) || 0;
+    const greenPct = parseFloat(document.getElementById('calc-green').value) || 0;
+    const lossPct = parseFloat(document.getElementById('calc-loss').value) || 0;
+
+    const stopGreen = banca * (greenPct / 100);
+    const stopLoss = banca * (lossPct / 100);
+    const bancaFinal = banca + stopGreen;
+
+    document.getElementById('res-green').innerText = 'R$ ' + stopGreen.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('res-loss').innerText = 'R$ ' + stopLoss.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('res-final').innerText = 'R$ ' + bancaFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+
+    // Mostrar mensagens apenas como exemplo de feedback
+    const msgG = document.getElementById('msg-green');
+    const msgR = document.getElementById('msg-red');
+
+    if (banca > 0 && greenPct > 0) {
+        msgG.classList.add('active');
+        msgR.classList.remove('active');
+    } else {
+        msgG.classList.remove('active');
+        msgR.classList.remove('active');
+    }
+}
+</script>
 
 <div class="divider"></div>
 
