@@ -1303,10 +1303,10 @@
             </div>
 
             <div id="msg-green" class="calc-msg msg-green">
-                🏆 <strong>Meta Atingida!</strong> Parabéns pela disciplina. Encerre por hoje, aproveite seu lucro e volte amanhã com a mesma mentalidade.
+                🏆 Meta Atingida! Parabéns pela disciplina. Encerre por hoje, aproveite seu lucro e volte amanhã com a mesma mentalidade.
             </div>
             <div id="msg-red" class="calc-msg msg-red">
-                🛡️ <strong>Stop Loss Atingido!</strong> Respeite seu gerenciamento acima de tudo. Calma, amanhã é um novo dia e estamos juntos nessa! A consistência vem da proteção do capital.
+                🛡️ Respeite seu gerenciamento acima de tudo. Calma, amanhã é um novo dia e estamos juntos nessa! A consistência vem da proteção do capital.
             </div>
         </div>
     </div>
@@ -1330,13 +1330,8 @@ function calcularGestao() {
     const msgG = document.getElementById('msg-green');
     const msgR = document.getElementById('msg-red');
 
-    if (banca > 0 && greenPct > 0) {
-        msgG.classList.add('active');
-        msgR.classList.remove('active');
-    } else {
-        msgG.classList.remove('active');
-        msgR.classList.remove('active');
-    }
+    msgG.classList.remove('active');
+    msgR.classList.remove('active');
 }
 </script>
 
