@@ -45,17 +45,17 @@
         body::before {
             content: '';
             position: fixed; inset: 0; z-index: 9998; pointer-events: none;
-            border: 2px solid rgba(201,168,76,0.0);
+            border: 1px solid rgba(138, 43, 226, 0.0);
             box-shadow:
-                inset 0 0 40px rgba(201,168,76,0),
-                0 0 40px rgba(201,168,76,0);
-            animation: bordaPulse 3s ease-in-out infinite;
+                inset 0 0 20px rgba(138, 43, 226, 0),
+                0 0 20px rgba(138, 43, 226, 0);
+            animation: bordaPulse 6s ease-in-out infinite;
             border-radius: 0;
         }
         @keyframes bordaPulse {
-            0%   { box-shadow: inset 0 0 20px rgba(201,168,76,0.05), 0 0 20px rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.08); }
-            50%  { box-shadow: inset 0 0 60px rgba(201,168,76,0.18), 0 0 60px rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.35); }
-            100% { box-shadow: inset 0 0 20px rgba(201,168,76,0.05), 0 0 20px rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.08); }
+            0%   { box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.03), 0 0 10px rgba(0, 160, 255, 0.03); border-color: rgba(138, 43, 226, 0.05); }
+            50%  { box-shadow: inset 0 0 35px rgba(138, 43, 226, 0.12), 0 0 35px rgba(0, 160, 255, 0.1); border-color: rgba(138, 43, 226, 0.25); }
+            100% { box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.03), 0 0 10px rgba(0, 160, 255, 0.03); border-color: rgba(138, 43, 226, 0.05); }
         }
 
         /* ═══════════════════════════════
