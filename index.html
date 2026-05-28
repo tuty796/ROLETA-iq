@@ -1459,12 +1459,8 @@ function calcularGestao() {
                 <strong>Liberação Automática:</strong> Pague via Mercado Pago e o sistema liberará seu acesso na hora.
             </div>
             
-            <button class="pay-btn-copy" onclick="window.location.href='https://mpago.la/24WyJ3h'" style="background: linear-gradient(135deg, #009ee3, #007eb5); color: white; margin-bottom: 12px; font-size: 14px; height: 55px; cursor: pointer; border: none; border-radius: 12px; width: 100%; font-weight: bold; text-transform: uppercase;">
+            <button class="pay-btn-copy" onclick="window.location.href='https://mpago.la/24WyJ3h'" style="background: linear-gradient(135deg, #009ee3, #007eb5); color: white; margin-bottom: 20px; font-size: 14px; height: 55px; cursor: pointer; border: none; border-radius: 12px; width: 100%; font-weight: bold; text-transform: uppercase;">
                 PAGAR R$ 2,00 E LIBERAR
-            </button>
-
-            <button onclick="liberarManual()" style="background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 12px; cursor: pointer; font-size: 0.75rem; width: 100%; font-weight: bold; text-transform: uppercase; margin-bottom: 20px;">
-                <i class="fas fa-check-circle"></i> JÁ PAGUEI? LIBERAR AGORA
             </button>
 
             <div class="divider" style="margin-bottom: 20px; opacity: 0.1;"></div>
@@ -1675,14 +1671,6 @@ function calcularGestao() {
         document.getElementById('totalDerrotas').textContent = derrotas;
         const total = vitorias + derrotas;
         document.getElementById('assertividade').textContent = total > 0 ? Math.round(vitorias/total*100)+'%' : '—';
-    }
-
-    function liberarManual() {
-        rodadasContador = 0;
-        localStorage.setItem('r1m_rodadas', 0);
-        document.getElementById('pay-overlay').classList.remove('active');
-        alert('✅ Acesso Liberado! Boas operações.');
-        window.location.href = window.location.pathname;
     }
 
     function zerarMarcador() {
