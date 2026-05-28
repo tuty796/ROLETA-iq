@@ -746,6 +746,32 @@
         .footer-final { font-family: 'Rajdhani', sans-serif; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: linear-gradient(90deg, var(--gold), var(--silver2), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 24px; }
         .footer-copy { font-size: 0.7rem; color: #2a2a2a; padding-top: 20px; border-top: 1px solid #161616; }
 
+        /* BLOQUEIO PIX */
+        .pay-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.96);
+            z-index: 9999; display: none; align-items: center; justify-content: center;
+            padding: 20px; backdrop-filter: blur(10px);
+        }
+        .pay-overlay.active { display: flex; animation: fadeIn 0.5s ease; }
+        .pay-card {
+            background: #0d0c08; border: 1px solid var(--gold); border-radius: 20px;
+            padding: 30px; max-width: 400px; width: 100%; text-align: center;
+            box-shadow: 0 0 50px rgba(201,168,76,0.2);
+        }
+        .pay-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--gold2); margin-bottom: 10px; letter-spacing: 2px; }
+        .pay-msg { font-size: 0.9rem; color: var(--silver2); line-height: 1.6; margin-bottom: 24px; }
+        .pay-qr-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
+        .pay-btn-copy {
+            background: var(--gold); color: #000; border: none; border-radius: 10px;
+            padding: 12px 24px; font-family: 'Rajdhani', sans-serif; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px; cursor: pointer; width: 100%;
+            transition: 0.2s; margin-bottom: 15px;
+        }
+        .pay-btn-copy:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(201,168,76,0.4); }
+        .pay-status { font-size: 0.8rem; color: var(--muted); font-style: italic; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .pay-spinner { width: 14px; height: 14px; border: 2px solid rgba(201,168,76,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         .pulse { animation: pulse 0.3s ease; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
     </style>
@@ -1424,6 +1450,27 @@ function calcularGestao() {
 
 <div class="divider"></div>
 
+<!-- OVERLAY DE PAGAMENTO -->
+<div class="pay-overlay" id="pay-overlay">
+    <div class="pay-card">
+        <div class="pay-title">SESSÃO LIMITADA</div>
+        <div class="pay-msg">
+            O analisador atingiu o limite de 20 rodadas gratuitas.<br><br>
+            <strong>Ajude-nos a manter a ferramenta online:</strong> contribua com apenas R$ 2,00 para liberar mais 20 rodadas.
+        </div>
+        <div class="pay-qr-wrap"><div id="qrcode-pay"></div></div>
+        <div class="pix-chave-box" style="margin-bottom:20px;">
+            <div class="pix-chave-label">PIX COPIA E COLA</div>
+            <div class="pix-chave" id="pay-chave-txt" style="font-size:10px; overflow: hidden; text-overflow: ellipsis;">2149f2b9-67f9-46e1-9d62-fcb33d6e0b3d</div>
+        </div>
+        <button class="pay-btn-copy" onclick="copiarPixOverlay()">Copiar Chave Pix</button>
+        <div class="pay-status">
+            <div class="pay-spinner"></div>
+            Aguardando pagamento automático...
+        </div>
+    </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="site-footer">
     <div class="container">
@@ -1503,6 +1550,37 @@ function calcularGestao() {
         34:[7,20],35:[3,33,15],36:[20,30]
     };
     let historico = [], saldo = 0, vitorias = 0, derrotas = 0;
+    let rodadasContador = parseInt(localStorage.getItem('r1m_rodadas')) || 0;
+    const LIMITE_RODADAS = 20;
+
+    window.addEventListener('load', () => {
+        verificarBloqueio();
+    });
+
+    function verificarBloqueio() {
+        if (rodadasContador >= LIMITE_RODADAS) {
+            document.getElementById('pay-overlay').classList.add('active');
+            gerarQRCodePagamento();
+        }
+    }
+
+    function gerarQRCodePagamento() {
+        const qrContainer = document.getElementById("qrcode-pay");
+        qrContainer.innerHTML = '';
+        const pixPayload = gerarPixPayload(PIX_CHAVE, '2.00', 'Desbloqueio Analisador R1M');
+        new QRCode(qrContainer, {
+            text: pixPayload, width: 180, height: 180,
+            colorDark: "#c9a84c", colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+        });
+        document.getElementById('pay-chave-txt').innerText = PIX_CHAVE;
+    }
+
+    function copiarPixOverlay() {
+        navigator.clipboard.writeText(PIX_CHAVE).then(() => {
+            alert('Chave Pix copiada com sucesso!');
+        });
+    }
 
     function aoDigitar() {
         const input = document.getElementById('numNovo');
@@ -1512,6 +1590,10 @@ function calcularGestao() {
     }
 
     function adicionarNumero() {
+        rodadasContador++;
+        localStorage.setItem('r1m_rodadas', rodadasContador);
+        verificarBloqueio();
+
         const input = document.getElementById('numNovo');
         const val = input.value.trim();
         const n = parseInt(val);
