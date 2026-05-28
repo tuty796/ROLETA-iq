@@ -41,24 +41,21 @@
             overflow-x: hidden;
         }
 
-        /* SCANLINE OVERLAY */
+        /* BORDA PULSANTE */
         body::before {
             content: '';
-            position: fixed; inset: 0; z-index: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.015) 3px, rgba(0,0,0,0.015) 6px);
-            pointer-events: none;
+            position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+            border: 2px solid rgba(201,168,76,0.0);
+            box-shadow:
+                inset 0 0 40px rgba(201,168,76,0),
+                0 0 40px rgba(201,168,76,0);
+            animation: bordaPulse 3s ease-in-out infinite;
+            border-radius: 0;
         }
-
-        /* SCAN LINE ANIMADA */
-        .scan-fx {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: 2px; z-index: 9999; pointer-events: none;
-            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
-            animation: scanline 8s linear infinite;
-        }
-        @keyframes scanline {
-            0% { transform: translateY(-10px); }
-            100% { transform: translateY(100vh); }
+        @keyframes bordaPulse {
+            0%   { box-shadow: inset 0 0 20px rgba(201,168,76,0.05), 0 0 20px rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.08); }
+            50%  { box-shadow: inset 0 0 60px rgba(201,168,76,0.18), 0 0 60px rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.35); }
+            100% { box-shadow: inset 0 0 20px rgba(201,168,76,0.05), 0 0 20px rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.08); }
         }
 
         /* ═══════════════════════════════
@@ -728,7 +725,7 @@
 </head>
 <body>
 
-<div class="scan-fx"></div>
+
 
 <!-- NAV FLUTUANTE -->
 <nav class="nav">
@@ -738,6 +735,7 @@
         <li><a href="#analises">Análises</a></li>
         <li><a href="#oracle">Oracle</a></li>
         <li><a href="#tabela">Tabela</a></li>
+        <li><a href="#como-usar">Como Usar</a></li>
         <li><a href="#analisador">Analisador</a></li>
     </ul>
 </nav>
@@ -1115,6 +1113,118 @@
 
 <div class="divider"></div>
 
+<!-- ═══ ADSENSE TOPO ═══ -->
+<div style="background:var(--dark1);padding:16px 20px;text-align:center;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;">
+    <!-- Google AdSense — substitua pelo seu código após aprovação -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+    <ins class="adsbygoogle"
+         style="display:block;min-height:90px;background:rgba(201,168,76,0.03);border:1px dashed rgba(201,168,76,0.15);border-radius:8px;line-height:90px;color:#2a2010;font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:3px;"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true">
+        <!-- ESPAÇO PUBLICITÁRIO · GOOGLE ADSENSE -->
+    </ins>
+</div>
+
+<!-- ═══ COMO USAR O ANALISADOR ═══ -->
+<section class="section" id="como-usar">
+    <div class="container">
+        <div class="s-eyebrow">Guia de Uso</div>
+        <div class="s-title">Como usar o <span>Analisador</span></div>
+
+        <div class="oracle-intro" style="margin-bottom:32px;">
+            <p>Utilize nosso <strong>Analisador em Tempo Real</strong> para aumentar sua assertividade operacional dentro da roleta. Compatível com <strong>qualquer casa de apostas e qualquer mesa de roleta ao vivo</strong> — basta alimentar o sistema com os números que saírem.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:36px;">
+
+            <div class="step">
+                <div><div class="step-n">01</div></div>
+                <div>
+                    <h3>Inicialize com os 4 primeiros números</h3>
+                    <div class="step-sub">Calibração do Sistema</div>
+                    <p>Observe a linha do tempo da mesa e digite os <strong>últimos 4 números</strong> que saíram, um de cada vez, clicando em <strong>+</strong> após cada um. Isso calibra o analisador com o comportamento atual da mesa.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div><div class="step-n">02</div></div>
+                <div>
+                    <h3>Alimente com o último número a cada rodada</h3>
+                    <div class="step-sub">Atualização Contínua</div>
+                    <p>A partir da 5ª rodada, insira <strong>apenas o número mais recente</strong> que saiu na roleta. O analisador atualiza automaticamente suas sugestões com base nos últimos 4 resultados em tempo real.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div><div class="step-n">03</div></div>
+                <div>
+                    <h3>Interprete os resultados</h3>
+                    <div class="step-sub">Leitura das Sugestões</div>
+                    <p>Os números sugeridos aparecem com cores que indicam o nível de convergência estatística:</p>
+                    <div class="chip-row" style="margin-top:10px;">
+                        <span class="chip" style="border-color:rgba(0,160,255,0.4);color:#00aaff;background:rgba(0,160,255,0.08);">💙 Azul — Boa entrada</span>
+                        <span class="chip" style="border-color:rgba(255,140,0,0.4);color:#ff9500;background:rgba(255,140,0,0.08);">🔥 Laranja — Ótima entrada</span>
+                        <span class="chip" style="border-color:rgba(240,208,96,0.5);color:#f0d060;background:rgba(240,208,96,0.08);">🌶️ Dourado — Entrada excelente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div><div class="step-n">04</div></div>
+                <div>
+                    <h3>Execute a entrada com proteção</h3>
+                    <div class="step-sub">Aplicação Operacional</div>
+                    <p>Priorize os <strong>3 ou 4 primeiros números indicados</strong> pelo analisador, protegendo cada um com <strong>2 a 3 vizinhos</strong> na race da roleta. Isso aumenta a cobertura do setor e reduz a exposição ao risco operacional.</p>
+                    <p style="margin-top:8px;color:var(--muted);font-size:0.82rem;">Combine sempre com a leitura da linha temporal e o método operacional para máxima assertividade.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Player de Vídeo Tutorial -->
+        <div class="block-title"><span class="dot g2"></span> Vídeo Tutorial</div>
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;overflow:hidden;margin-bottom:14px;">
+            <div style="padding:16px 20px 12px;border-bottom:1px solid var(--dark4);">
+                <div style="font-family:'Rajdhani',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">Tutorial em Vídeo</div>
+                <div style="font-size:0.85rem;color:var(--silver3);margin-top:3px;">Como usar o analisador na prática</div>
+            </div>
+            <!-- Cole abaixo o link do seu vídeo do YouTube (substitua VIDEO_ID pelo ID do vídeo) -->
+            <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+                <iframe
+                    id="video-tutorial"
+                    style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+                    src="https://www.youtube.com/embed/VIDEO_ID_AQUI"
+                    title="Tutorial — Como usar o Analisador de Roleta"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <div style="padding:12px 20px;text-align:center;font-size:0.78rem;color:var(--muted);font-family:'Rajdhani',sans-serif;letter-spacing:0.06em;">
+                Assista ao tutorial completo e aprenda a usar o analisador de forma profissional
+            </div>
+        </div>
+
+        <!-- AdSense meio de página -->
+        <div style="text-align:center;margin-top:24px;">
+            <!-- Google AdSense — substitua pelo seu código após aprovação -->
+            <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+            <ins class="adsbygoogle"
+                 style="display:block;min-height:250px;background:rgba(201,168,76,0.03);border:1px dashed rgba(201,168,76,0.15);border-radius:8px;line-height:250px;color:#2a2010;font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:3px;"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="rectangle"
+                 data-full-width-responsive="true">
+                <!-- ESPAÇO PUBLICITÁRIO · GOOGLE ADSENSE -->
+            </ins>
+        </div>
+
+    </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- ═══ ANALISADOR ═══ -->
 <section id="analisador">
     <div class="container-sm">
@@ -1186,15 +1296,15 @@
         <!-- PIX -->
         <div class="pix-card">
             <div class="pix-titulo">◈ APOIE ESTA PÁGINA</div>
-            <div class="pix-subtitulo">Ajude a manter a ferramenta no ar</div>
+            <div class="pix-subtitulo">Ajude-nos a manter essa página online e gratuita para todos</div>
             <div class="pix-valor">R$ <span>2,00</span></div>
             <div class="qr-wrap"><div id="qrcode"></div></div>
             <div class="pix-chave-box">
-                <div class="pix-chave-label">CHAVE PIX · CPF</div>
-                <div class="pix-chave" id="chave-display">012.495.820-67</div>
+                <div class="pix-chave-label">CHAVE PIX · ALEATÓRIA</div>
+                <div class="pix-chave" id="chave-display" style="font-size:10px;letter-spacing:1px;">2149f2b9-67f9-46e1-9d62-fcb33d6e0b3d</div>
             </div>
             <button class="btn-copiar-pix" onclick="copiarPix()" id="btn-pix">◈ Copiar Chave Pix</button>
-            <div class="pix-mensagem">Com apenas R$ 2,00 você ajuda a manter essa ferramenta gratuita para todos. 🙏</div>
+            <div class="pix-mensagem">Com apenas R$ 2,00 você contribui para manter essa ferramenta gratuita e disponível para toda a comunidade. Toda contribuição faz diferença. 🙏</div>
         </div>
 
     </div>
@@ -1219,10 +1329,24 @@
     </div>
 </footer>
 
+<!-- AdSense rodapé -->
+<div style="background:var(--dark1);padding:16px 20px;text-align:center;border-top:1px solid #1a1a1a;">
+    <!-- Google AdSense — substitua pelo seu código após aprovação -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+    <ins class="adsbygoogle"
+         style="display:block;min-height:90px;background:rgba(201,168,76,0.03);border:1px dashed rgba(201,168,76,0.15);border-radius:8px;line-height:90px;color:#2a2010;font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:3px;"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true">
+        <!-- ESPAÇO PUBLICITÁRIO · GOOGLE ADSENSE -->
+    </ins>
+</div>
+
 <!-- QR CODE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-    const PIX_CHAVE = '01249582067';
+    const PIX_CHAVE = '2149f2b9-67f9-46e1-9d62-fcb33d6e0b3d';
     window.addEventListener('load', () => {
         const pixPayload = gerarPixPayload(PIX_CHAVE, '2.00', 'Apoio Analisador Roleta');
         new QRCode(document.getElementById("qrcode"), {
