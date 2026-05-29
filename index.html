@@ -1457,18 +1457,31 @@ function calcularGestao() {
             <div class="pay-title">SESSÃO LIMITADA</div>
             <div class="pay-msg">
                 O analisador atingiu o limite de 20 rodadas gratuitas.<br><br>
-                <strong>Liberação Automática:</strong> Pague via Mercado Pago e o sistema liberará seu acesso na hora.
+                <strong>Liberação Automática:</strong> Pague via Mercado Pago e você será redirecionado para continuar operando.
             </div>
             
-            <button class="pay-btn-copy" onclick="window.location.href='https://mpago.la/24WyJ3h'">
+            <a href="https://mpago.la/24WyJ3h" target="_blank" class="pay-btn-copy" id="pay-link" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
                 PAGAR R$ 2,00 E LIBERAR
-            </button>
+            </a>
+
+            <div class="pay-msg" style="font-size: 0.7rem; color: var(--muted); margin-top: -10px; margin-bottom: 20px;">
+                * Após pagar, aguarde o redirecionamento ou volte aqui.
+            </div>
 
             <div class="divider" style="margin-bottom: 20px; opacity: 0.1;"></div>
 
             <div class="pay-status">
                 <div class="pay-spinner"></div>
-                Aguardando confirmação de pagamento...
+                Aguardando confirmação...
+            </div>
+
+            <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                <button onclick="checkManualPay()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 12px; width: 100%; font-weight: 600;">
+                    JÁ PAGUEI E NÃO LIBEROU
+                </button>
+                <a href="https://wa.me/55?text=Olá, paguei os R$ 2,00 no analisador e não liberou." target="_blank" style="text-align: center; color: var(--gold); font-size: 11px; text-decoration: none; opacity: 0.8;">
+                    Falar com Suporte (Enviar Comprovante)
+                </a>
             </div>
         </div>
     </div>
@@ -1554,6 +1567,11 @@ function calcularGestao() {
         } else {
             document.getElementById('pay-overlay').classList.remove('active');
         }
+    }
+
+    function checkManualPay() {
+        // Tenta recarregar para ver se o parâmetro aparece ou se o cache limpou
+        window.location.reload();
     }
 
     function gerarPixPayload(chave, valor, descricao) {
