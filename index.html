@@ -1578,15 +1578,17 @@ function calcularGestao() {
         const erro = document.getElementById('cod-error');
         const cod = input.value.trim().toUpperCase();
         
-        // GERADOR DE CÓDIGOS DIÁRIOS (5 Opções)
+        // GERADOR DE CÓDIGOS DIÁRIOS (Números diferentes para cada nível)
         const d = new Date();
-        const diaMes = "" + d.getDate() + (d.getMonth() + 1);
+        const dia = d.getDate();
+        const mes = d.getMonth() + 1;
+        
         const codigosValidos = [
-            "R1M" + diaMes,
-            "VIP" + diaMes,
-            "GOLD" + diaMes,
-            "PREMIUM" + diaMes,
-            "EXTREMO" + diaMes
+            "R1M" + (dia + mes),          // Ex: 30+5 = 35 -> R1M35
+            "VIP" + (dia + mes + 7),      // Ex: 30+5+7 = 42 -> VIP42
+            "GOLD" + (dia + 12),          // Ex: 30+12 = 42 -> GOLD42
+            "PREMIUM" + (dia + mes + 20), // Ex: 30+5+20 = 55 -> PREMIUM55
+            "EXTREMO" + (dia * 2)         // Ex: 30*2 = 60 -> EXTREMO60
         ];
         const masterCod = "MASTER100";
 
