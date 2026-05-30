@@ -1577,11 +1577,27 @@ function calcularGestao() {
         const erro = document.getElementById('cod-error');
         const cod = input.value.trim().toUpperCase();
         
-        // CÓDIGO DO DIA (Exemplo: R1M + Dia + Mês)
+        // CÓDIGO DO DIA (R1M + Dia + Mês)
         const d = new Date();
         const codCorreto = "R1M" + d.getDate() + (d.getMonth() + 1);
+        const masterCod = "MASTER100";
+
+        // Verifica se o código já foi usado neste aparelho
+        const codigosUsados = JSON.parse(localStorage.getItem('r1m_codigos_usados') || '[]');
+
+        if (codigosUsados.includes(cod) && cod !== masterCod) {
+            erro.innerText = "Este código já foi utilizado. Adquira um novo acesso.";
+            erro.style.display = "block";
+            return;
+        }
         
-        if (cod === codCorreto || cod === "MASTER100") {
+        if (cod === codCorreto || cod === masterCod) {
+            // "Queima" o código (exceto o master)
+            if (cod !== masterCod) {
+                codigosUsados.push(cod);
+                localStorage.setItem('r1m_codigos_usados', JSON.stringify(codigosUsados));
+            }
+
             rodadasContador = 0;
             localStorage.setItem('r1m_rodadas', 0);
             document.getElementById('pay-overlay').classList.remove('active');
@@ -1589,6 +1605,7 @@ function calcularGestao() {
             input.value = "";
             erro.style.display = "none";
         } else {
+            erro.innerText = "Código inválido ou expirado.";
             erro.style.display = "block";
             input.style.borderColor = "var(--red-neon)";
         }
