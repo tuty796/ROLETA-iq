@@ -1578,9 +1578,16 @@ function calcularGestao() {
         const erro = document.getElementById('cod-error');
         const cod = input.value.trim().toUpperCase();
         
-        // CÓDIGO DO DIA (R1M + Dia + Mês)
+        // GERADOR DE CÓDIGOS DIÁRIOS (5 Opções)
         const d = new Date();
-        const codCorreto = "R1M" + d.getDate() + (d.getMonth() + 1);
+        const diaMes = "" + d.getDate() + (d.getMonth() + 1);
+        const codigosValidos = [
+            "R1M" + diaMes,
+            "VIP" + diaMes,
+            "GOLD" + diaMes,
+            "PREMIUM" + diaMes,
+            "EXTREMO" + diaMes
+        ];
         const masterCod = "MASTER100";
 
         // Verifica se o código já foi usado neste aparelho
@@ -1592,7 +1599,7 @@ function calcularGestao() {
             return;
         }
         
-        if (cod === codCorreto || cod === masterCod) {
+        if (codigosValidos.includes(cod) || cod === masterCod) {
             // "Queima" o código (exceto o master)
             if (cod !== masterCod) {
                 codigosUsados.push(cod);
