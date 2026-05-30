@@ -1476,11 +1476,14 @@ function calcularGestao() {
             </div>
 
             <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
-                <button onclick="checkManualPay()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 12px; width: 100%; font-weight: 600;">
-                    JÁ PAGUEI E NÃO LIBEROU
+                <input type="text" id="cod-liberacao" placeholder="Insira o Código de Liberação" style="background: rgba(255,255,255,0.05); border: 1px solid var(--gold); color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; text-align: center; outline: none;">
+                <button onclick="validarCodigo()" style="background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; text-transform: uppercase;">
+                    LIBERAR COM CÓDIGO
                 </button>
-                <a href="https://wa.me/5551981682816?text=Olá, paguei os R$ 2,00 no analisador e não liberou." target="_blank" style="text-align: center; color: var(--gold); font-size: 11px; text-decoration: none; opacity: 0.8;">
-                    Falar com Suporte (Enviar Comprovante)
+                <div id="cod-error" style="color: var(--red-neon); font-size: 11px; display: none;">Código inválido ou expirado.</div>
+                <div class="divider" style="margin: 10px 0; opacity: 0.1;"></div>
+                <a href="https://wa.me/5551981682816?text=Olá, paguei os R$ 2,00 no analisador e quero meu Código de Liberação. [ENVIAR COMPROVANTE]" target="_blank" style="text-align: center; color: var(--gold); font-size: 12px; text-decoration: none; font-weight: 600;">
+                    Solicitar Código via WhatsApp (Enviar Comprovante)
                 </a>
             </div>
         </div>
@@ -1566,6 +1569,28 @@ function calcularGestao() {
             document.getElementById('pay-overlay').classList.add('active');
         } else {
             document.getElementById('pay-overlay').classList.remove('active');
+        }
+    }
+
+    function validarCodigo() {
+        const input = document.getElementById('cod-liberacao');
+        const erro = document.getElementById('cod-error');
+        const cod = input.value.trim().toUpperCase();
+        
+        // CÓDIGO DO DIA (Exemplo: R1M + Dia + Mês)
+        const d = new Date();
+        const codCorreto = "R1M" + d.getDate() + (d.getMonth() + 1);
+        
+        if (cod === codCorreto || cod === "MASTER100") {
+            rodadasContador = 0;
+            localStorage.setItem('r1m_rodadas', 0);
+            document.getElementById('pay-overlay').classList.remove('active');
+            alert('✅ Acesso Liberado com Sucesso!');
+            input.value = "";
+            erro.style.display = "none";
+        } else {
+            erro.style.display = "block";
+            input.style.borderColor = "var(--red-neon)";
         }
     }
 
