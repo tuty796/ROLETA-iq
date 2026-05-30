@@ -1549,6 +1549,7 @@ function calcularGestao() {
         if (urlParams.get('paid') === 'true') {
             rodadasContador = 0;
             localStorage.setItem('r1m_rodadas', 0);
+            localStorage.removeItem('r1m_codigos_usados'); // Limpa códigos usados ao pagar de novo
             window.history.replaceState({}, document.title, window.location.pathname);
             alert('✅ Pagamento Confirmado! Sua sessão foi liberada.');
         }
