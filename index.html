@@ -1569,6 +1569,24 @@ function calcularGestao() {
     const LIMITE_RODADAS = 20;
 
     // ANALISADOR
+    const gatilhosSniper = {
+        24: [15, 25, 35], 5: [15, 25, 35],
+        10: [0], 23: [0],
+        32: [10], 0: [10], 26: [10],
+        3: [33], 33: [3], 16: [3],
+        15: [35], 35: [15], 12: [15],
+        28: [17], 7: [17], 29: [17]
+    };
+
+    const zonasConvergencia = {
+        20: [30, 8, 11, 36, 17, 34, 6, 13],
+        22: [25, 2, 21],
+        9: [4, 19],
+        2: [18, 22],
+        19: [9, 31],
+        17: [14, 21]
+    };
+
     const tabela = {
         0:[10,20,30],1:[17,7],2:[2,22],3:[3,33],4:[21,9],5:[25,15,35],
         6:[20,17,7],7:[7,17,20],8:[30,0,20],9:[9,19],10:[0,20,30],
@@ -1740,34 +1758,91 @@ function calcularGestao() {
     function analisar() {
         const resultadoDiv = document.getElementById('resultado');
         const entradas = historico.slice(-4);
+        const ultimos5 = historico.slice(-5);
+        const ultimo = historico[historico.length - 1];
+        
         if (!entradas.length) {
             resultadoDiv.className = 'resultado';
             resultadoDiv.innerHTML = '<span class="placeholder-txt">Digite os primeiros números</span>';
             return;
         }
+
+        let isSniper = false;
+        let sniperNums = [];
+        if (gatilhosSniper[ultimo]) {
+            isSniper = true;
+            sniperNums = gatilhosSniper[ultimo];
+        }
+
+        // Checar Convergência (60%) se não for sniper
+        let convergencia = null;
+        if (!isSniper) {
+            for (let zonaId in zonasConvergencia) {
+                let count = 0;
+                ultimos5.forEach(n => { if (zonasConvergencia[zonaId].includes(n)) count++; });
+                if (count >= 2) {
+                    convergencia = { zona: parseInt(zonaId), forca: count };
+                    break;
+                }
+            }
+        }
+
         const contagem = {};
         entradas.forEach(num => { (tabela[num] || []).forEach(s => { contagem[s] = (contagem[s] || 0) + 1; }); });
+        
+        // Se for Sniper, dá peso máximo
+        if (isSniper) {
+            sniperNums.forEach(n => { contagem[n] = (contagem[n] || 0) + 10; });
+        } else if (convergencia) {
+            contagem[convergencia.zona] = (contagem[convergencia.zona] || 0) + 5;
+        }
+
+        // Filtro de Dispersão: Se temos muitos números e pouca convergência
+        const totalFontes = Object.values(contagem).reduce((a, b) => a + b, 0);
+        const dispersao = !isSniper && !convergencia && totalFontes < 3 && entradas.length >= 4;
+
+        if (dispersao) {
+            resultadoDiv.className = 'resultado ativo';
+            resultadoDiv.innerHTML = '<div class="resultado-label">◈ MESA EM DISPERSÃO</div><div style="color:var(--gold); font-size:12px; margin-top:10px;">Aguarde novo gatilho Sniper ou convergência de setor.</div>';
+            return;
+        }
+
         const numeros = Object.keys(contagem).map(n => parseInt(n)).sort((a,b) => contagem[b]-contagem[a] || a-b);
+        
         if (!numeros.length) {
             resultadoDiv.className = 'resultado ativo';
             resultadoDiv.innerHTML = '<span style="color:var(--gold2)">Nenhuma sugestão encontrada</span>';
             return;
         }
+
         const badges = numeros.map(n => {
-            const nv = nivel(contagem[n]);
+            const isSniperNum = isSniper && sniperNums.includes(n);
+            const isConvNum = convergencia && convergencia.zona === n;
+            const nv = isSniperNum ? { cls: 'excelente', icone: '🎯' } : (isConvNum ? { cls: 'forte', icone: '🔥' } : nivel(contagem[n]));
             return `<div class="num-badge ${nv.cls}"><span>${n}</span><span class="icone">${nv.icone}</span></div>`;
         }).join('');
-        const niveisPresentes = [...new Set(numeros.map(n => nivel(contagem[n]).cls))];
-        const legendaMap = { excelente:'🌶️ 4+ FONTES', forte:'🔥 3 FONTES', normal:'💙 2 FONTES', simples:'☘️ 1 FONTE' };
+
+        let label = `◈ SUGESTÕES BASEADAS NOS ÚLTIMOS ${entradas.length} NÚMEROS`;
+        if (isSniper) label = '◈ GATILHO SNIPER ATIVADO (90% ASSERT)';
+        else if (convergencia) label = `◈ CONVERGÊNCIA DE SETOR (FORÇA ${convergencia.forca}/5)`;
+        
+        const niveisPresentes = [...new Set(numeros.map(n => {
+             if (isSniper && sniperNums.includes(n)) return 'excelente';
+             if (convergencia && convergencia.zona === n) return 'forte';
+             return nivel(contagem[n]).cls;
+        }))];
+        
+        const legendaMap = { excelente:'🌶️ SNIPER/ALTA', forte:'🔥 FORTE', normal:'💙 NORMAL', simples:'☘️ SIMPLES' };
         const legendaHtml = niveisPresentes.map(cls =>
             `<div class="leg-item ${cls}"><div class="leg-dot ${cls}"></div>${legendaMap[cls]}</div>`
         ).join('');
+
         resultadoDiv.className = 'resultado ativo';
         resultadoDiv.innerHTML = `
-            <div class="resultado-label">◈ SUGESTÕES BASEADAS NOS ÚLTIMOS ${entradas.length} NÚMEROS</div>
+            <div class="resultado-label">${label}</div>
             <div class="numeros-grid">${badges}</div>
             <div class="legenda">${legendaHtml}</div>
-            <div class="resultado-info">Análise estatística · ${numeros.length} número${numeros.length>1?'s':''} identificado${numeros.length>1?'s':''}</div>
+            <div class="resultado-info">Análise Sniper/Convergência integrada</div>
         `;
     }
 
