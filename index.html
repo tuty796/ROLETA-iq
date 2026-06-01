@@ -1578,6 +1578,23 @@ function calcularGestao() {
         28: [17], 7: [17], 29: [17]
     };
 
+    // Associa cada número gatilho a um setor da Race
+    const setorDoGatilho = {
+        24: 'tiers', 5: 'tiers', 
+        10: 'zero', 23: 'zero', 32: 'zero', 0: 'zero', 26: 'zero',
+        3: 'voisins', 33: 'voisins', 16: 'voisins',
+        15: 'zero', 35: 'zero', 12: 'zero',
+        28: 'tiers', 7: 'tiers', 29: 'tiers'
+    };
+
+    // Mapeamento da Race (Sectores da Roleta)
+    const raceSectors = {
+        zero: [12, 35, 3, 26, 0, 32, 15, 19, 4, 21, 2, 25],
+        voisins: [22, 18, 29, 7, 28, 12, 35, 3, 26, 0, 32, 15, 19, 4, 21, 2, 25],
+        orphans: [1, 20, 14, 31, 9, 17, 34, 6],
+        tiers: [27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33]
+    };
+
     const zonasConvergencia = {
         20: [30, 8, 11, 36, 17, 34, 6, 13],
         22: [25, 2, 21],
@@ -1758,7 +1775,7 @@ function calcularGestao() {
     function analisar() {
         const resultadoDiv = document.getElementById('resultado');
         const entradas = historico.slice(-4);
-        const ultimos5 = historico.slice(-5);
+        const ultimos6 = historico.slice(-6); // Aumentamos um pouco para checar a zona
         const ultimo = historico[historico.length - 1];
         
         if (!entradas.length) {
@@ -1769,9 +1786,22 @@ function calcularGestao() {
 
         let isSniper = false;
         let sniperNums = [];
+        
+        // Regra do Sniper: Gatilho + Confirmação da Zona na Race (2 ou 3 números)
         if (gatilhosSniper[ultimo]) {
-            isSniper = true;
-            sniperNums = gatilhosSniper[ultimo];
+            const setor = setorDoGatilho[ultimo];
+            const numerosDaZona = raceSectors[setor];
+            let countNaZona = 0;
+            
+            ultimos6.forEach(n => {
+                if (numerosDaZona.includes(n)) countNaZona++;
+            });
+
+            // Só ativa Sniper se tiver pelo menos 2 números daquela zona na Race (incluindo o último)
+            if (countNaZona >= 2) {
+                isSniper = true;
+                sniperNums = gatilhosSniper[ultimo];
+            }
         }
 
         // Checar Convergência (60%) se não for sniper
@@ -1779,7 +1809,7 @@ function calcularGestao() {
         if (!isSniper) {
             for (let zonaId in zonasConvergencia) {
                 let count = 0;
-                ultimos5.forEach(n => { if (zonasConvergencia[zonaId].includes(n)) count++; });
+                ultimos6.forEach(n => { if (zonasConvergencia[zonaId].includes(n)) count++; });
                 if (count >= 2) {
                     convergencia = { zona: parseInt(zonaId), forca: count };
                     break;
@@ -1797,7 +1827,7 @@ function calcularGestao() {
             contagem[convergencia.zona] = (contagem[convergencia.zona] || 0) + 5;
         }
 
-        // Filtro de Dispersão: Se temos muitos números e pouca convergência
+        // Filtro de Dispersão
         const totalFontes = Object.values(contagem).reduce((a, b) => a + b, 0);
         const dispersao = !isSniper && !convergencia && totalFontes < 3 && entradas.length >= 4;
 
